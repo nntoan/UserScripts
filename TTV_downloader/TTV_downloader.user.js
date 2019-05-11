@@ -2,7 +2,7 @@
 // @name         TangThuVien downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ truyen.tangthuvien.vn định dạng epub
-// @version      1.0.0
+// @version      1.0.1
 // @icon         https://i.imgur.com/rt1QT6z.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -204,7 +204,7 @@
         pathname = location.pathname,
         referrer = location.protocol + '//' + host + pathname,
 
-        ebookFilename = pathname.slice(1, -1) + '.epub',
+        ebookFilename = pathname.slice(12) + '.epub',
 
         credits = '<p>Truyện được tải từ <a href="' + referrer + '">TangThuVien</a></p><p>Userscript được viết bởi: <a href="https://nntoan.com/">Toan Nguyen</a></p>',
 
