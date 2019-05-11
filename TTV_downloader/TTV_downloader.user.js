@@ -2,7 +2,7 @@
 // @name         TangThuVien downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ truyen.tangthuvien.vn định dạng epub
-// @version      1.0.1
+// @version      1.0.2
 // @icon         https://i.imgur.com/rt1QT6z.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -37,7 +37,8 @@
     converter = new RegExp('(' + converter + ')', 'i');
 
     function cleanHtml(str) {
-        str = str.replace(/\s*Chương\s*\d+\s?:[^<\n]/, '');
+        str = str.replace(/\s*Chương\s*\d+\s?:.*[^<\n]/g, '');
+        str = str.replace(/\s*Tiểu\s*thuyết\s?:.*[^<\n]/g, '');
         str = str.replace(/[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]+/gm, ''); // eslint-disable-line
         str = str.replace(/\s[a-zA-Z0-9]{6,8}(="")?\s/gm, function (key, attr) {
             if (attr) return ' ';
@@ -48,6 +49,7 @@
         });
         str = str.replace(/\([^(]+<button[^/]+<\/button>[^)]*\)\s*/gi, '');
         str = str.split(converter)[0];
+        str = str.replace(/\n/g, '<br />');
         return '<div>' + str + '</div>';
     }
 
