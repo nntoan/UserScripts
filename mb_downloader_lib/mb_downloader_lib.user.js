@@ -2,12 +2,13 @@
 // @name         MB Downloader Library
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.4
+// @version      0.0.5
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
 // @license      MIT; https://nntoan.mit-license.org/
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
+// @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/jepub@1.2.5/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.1/dist/FileSaver.min.js
 // @supportURL   https://github.com/nntoan/UserScripts/issues
@@ -24,10 +25,10 @@
 // ==/UserScript==
 /*jshint evil:true newcap:false*/
 /*global unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, $, document, console, location, setInterval, setTimeout, clearInterval, jEpub, saveAs*/
-(function(window) {
-    "use strict";
+(function($, window) {
+    'use strict';
 
-    var MbDownloader = {
+    $.widget('nntoan.mbDownloader', $.nntoan.mbDownloader, {
         jepub: null,
         processing: {
             count: 0,
@@ -117,10 +118,7 @@
             }
         },
 
-        /**
-         * Initialise MB Downloader
-         */
-        init: function () {
+        _create: function () {
             // Register core elements
             this.elements.$novelId = $(this.options.classNames.novelId);
             this.elements.$infoBlock = $(this.options.classNames.infoBlock);
@@ -148,7 +146,7 @@
             options.ebook.title = this.elements.$infoBlock.find(options.classNames.ebookTitle).text().trim();
             options.ebook.author = this.elements.$infoBlock.find(options.classNames.ebookAuthor).find('p').text().trim();
             options.ebook.cover = this.elements.$infoBlock.find(options.classNames.ebookCover).find('img').attr('src');
-            options.ebook.description= this.elements.$infoBlock.find(options.classNames.ebookDesc).html();
+            options.ebook.description = this.elements.$infoBlock.find(options.classNames.ebookDesc).html();
             var $ebookType = this.elements.$infoBlock.find(options.classNames.ebookType);
             if ($ebookType.length) {
                 $ebookType.each(function () {
@@ -309,7 +307,7 @@
             self.elements.$downloadBtn.removeClass(options.classNames.downloadBtnStatus).addClass('btn-' + status).addClass(status);
         },
 
-        downloadError: function(error, message) {
+        downloadError: function (error, message) {
             var options = this.options;
 
             this.downloadStatus('error');
@@ -388,12 +386,7 @@
 
             saveAs(epubZipContent, ebookFilepath);
         },
-    };
+    });
 
-    // assign MbDownloader to the window object
-    if (typeof window.MbDownloader === "undefined") {
-        // if it doesn't exist, just add it
-        window.MbDownloader = MbDownloader;
-        window._Mbd = MbDownloader;
-    }
-})(window);
+    return $.nntoan.mbDownloader;
+})(jQuery, window);
