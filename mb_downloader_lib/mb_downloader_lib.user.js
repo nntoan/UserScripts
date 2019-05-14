@@ -2,7 +2,7 @@
 // @name         MB Downloader Library
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.3
+// @version      0.0.4
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -391,7 +391,7 @@
     };
 
     // assign MbDownloader to the window object
-    if (typeof window.MbDownloader !== "object") {
+    if (typeof window.MbDownloader === "undefined") {
         // if it doesn't exist, just add it
         window.MbDownloader = MbDownloader;
         window._Mbd = MbDownloader;
