@@ -2,7 +2,7 @@
 // @name         MB Downloader Library
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.2
+// @version      0.0.3
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -54,7 +54,7 @@
             general: {
                 host: location.host,
                 pathname: location.pathname,
-                referrer: location.protocol + '//' + MbDownloader.options.general.host + MbDownloader.options.general.pathname,
+                referrer: location.protocol,
                 pageName: document.title,
             },
             processing: {
@@ -93,7 +93,7 @@
                 author: null,
                 description: null,
                 tags: null,
-                publisher: MbDownloader.options.general.host,
+                publisher: location.host,
             },
             chapters: {
                 chapList: [],
@@ -109,7 +109,7 @@
                 },
                 content: {
                     type: 'GET',
-                    url: MbDownloader.options.general.pathname + MbDownloader.options.chapters.chapId + '/',
+                    url: null,
                     xhrFields: {
                         withCredentials: true
                     }
@@ -136,6 +136,10 @@
             // Works with download button
             this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
             this.registerEventHandlers(this.elements.$downloadBtn, 'dl');
+
+            // Works with options
+            this.options.general.referrer = this.options.general.referrer + '//' + this.options.general.host + this.options.general.pathname;
+            this.options.xhr.content.url = this.options.general.pathname + this.options.chapters.chapId + '/';
         },
 
         getBookInfo: function () {
