@@ -2,7 +2,7 @@
 // @name         MB Downloader Library
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.5
+// @version      0.0.6
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -28,7 +28,7 @@
 (function($, window) {
     'use strict';
 
-    $.widget('nntoan.mbDownloader', $.nntoan.mbDownloader, {
+    $.widget('nntoan.mbDownloader', {
         jepub: null,
         processing: {
             count: 0,
