@@ -1,17 +1,10 @@
 // ==UserScript==
-// @name         MB Downloader Library
-// @namespace    https://nntoan.com/
-// @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.6
-// @icon         https://i.imgur.com/1Wyz9je.jpg
-// @author       Toan Nguyen
-// @oujs:author  nntoan
-// @license      MIT; https://nntoan.mit-license.org/
+// @namespace    https://github.com/nntoan/UserScripts
+// @exclude      *
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://unpkg.com/jepub@1.2.5/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.1/dist/FileSaver.min.js
-// @supportURL   https://github.com/nntoan/UserScripts/issues
 // @grant        unsafeWindow
 // @grant        GM_addStyle
 // @grant        GM_getValue
@@ -20,9 +13,20 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
 // @grant        GM_listValues
-// @connect      *
-// @run-at       document-start
+
+// ==UserLibrary==
+// @name         MB Downloader Library
+// @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
+// @version      0.0.7
+// @icon         https://i.imgur.com/1Wyz9je.jpg
+// @author       Toan Nguyen
+// @oujs:author  nntoan
+// @license      MIT; https://nntoan.mit-license.org/
+
 // ==/UserScript==
+
+// ==/UserLibrary==
+
 /*jshint evil:true newcap:false*/
 /*global unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, $, document, console, location, setInterval, setTimeout, clearInterval, jEpub, saveAs*/
 (function($, window) {
@@ -55,7 +59,7 @@
             general: {
                 host: location.host,
                 pathname: location.pathname,
-                referrer: location.protocol,
+                referrer: location.protocol + '//',
                 pageName: document.title,
             },
             processing: {
@@ -126,6 +130,12 @@
             if (!this.elements.$novelId.length || this.elements.$infoBlock) {
                 return;
             }
+        },
+
+        initialize: function () {
+            // Works with options
+            this.options.general.referrer = this.options.general.referrer + this.options.general.host + this.options.general.pathname;
+            this.options.xhr.content.url = this.options.general.pathname + this.options.chapters.chapId + '/';
 
             // Prepare & register jEpub instance
             this.getBookInfo();
@@ -134,10 +144,6 @@
             // Works with download button
             this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
             this.registerEventHandlers(this.elements.$downloadBtn, 'dl');
-
-            // Works with options
-            this.options.general.referrer = this.options.general.referrer + '//' + this.options.general.host + this.options.general.pathname;
-            this.options.xhr.content.url = this.options.general.pathname + this.options.chapters.chapId + '/';
         },
 
         getBookInfo: function () {
