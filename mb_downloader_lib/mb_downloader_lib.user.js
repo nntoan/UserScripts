@@ -17,7 +17,7 @@
 // ==UserLibrary==
 // @name         MB Downloader Library
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.9
+// @version      0.1.0
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -137,7 +137,7 @@
 
             // Prepare & register jEpub instance
             this.getBookInfo();
-            this.jepub = jEpub(this.options.ebook);
+            this.jepub = new jEpub(this.options.ebook);
 
             // Works with download button
             this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
