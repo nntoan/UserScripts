@@ -1,5 +1,11 @@
 // ==UserScript==
+// @name         MB Downloader Library
 // @namespace    https://github.com/nntoan/UserScripts
+// @version      0.1.5
+// @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
+// @icon         https://i.imgur.com/1Wyz9je.jpg
+// @author       Toan Nguyen
+// @license      MIT; https://nntoan.mit-license.org/
 // @exclude      *
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/jquery-ui@1.12.1/ui/widget.min.js
@@ -13,19 +19,7 @@
 // @run-at       document-idle
 // @connect      self
 // @noframes
-
-// ==UserLibrary==
-// @name         MB Downloader Library
-// @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.1.4
-// @icon         https://i.imgur.com/1Wyz9je.jpg
-// @author       Toan Nguyen
-// @oujs:author  nntoan
-// @license      MIT; https://nntoan.mit-license.org/
-
 // ==/UserScript==
-
-// ==/UserLibrary==
 
 /*jshint evil:true newcap:false*/
 /*global GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, console, location, jEpub, saveAs*/
@@ -137,7 +131,6 @@
 
             // Prepare & register jEpub instance
             this.getBookInfo();
-            console.log(saveAs);
             this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID());
 
             // Works with download button
