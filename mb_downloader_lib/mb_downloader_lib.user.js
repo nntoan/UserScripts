@@ -1,11 +1,5 @@
 // ==UserScript==
-// @name         MB Downloader Library
 // @namespace    https://github.com/nntoan/UserScripts
-// @version      0.1.5
-// @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @icon         https://i.imgur.com/1Wyz9je.jpg
-// @author       Toan Nguyen
-// @license      MIT; https://nntoan.mit-license.org/
 // @exclude      *
 // @require      https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
 // @require      https://cdn.jsdelivr.net/npm/jquery-ui@1.12.1/ui/widget.min.js
@@ -19,7 +13,19 @@
 // @run-at       document-idle
 // @connect      self
 // @noframes
+
+// ==UserLibrary==
+// @name         MB (MyBook) Downloader Factory
+// @description  A small jQuery widget which contains all required functionality to scraping data from story/novel on the Internet.
+// @version      0.1.6
+// @icon         https://i.imgur.com/1Wyz9je.jpg
+// @author       Toan Nguyen
+// @oujs:author  nntoan
+// @license      MIT; https://nntoan.mit-license.org/
+
 // ==/UserScript==
+
+// ==/UserLibrary==
 
 /*jshint evil:true newcap:false*/
 /*global GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, console, location, jEpub, saveAs*/
@@ -44,11 +50,14 @@
                 href: 'javascript:;',
                 text: 'Tải xuống'
             }),
+            $downloadWrapper: null,
             $novelId: null,
             $infoBlock: null,
         },
         options: {
             errorAlert: true,
+            createDownloadWrapper: false,
+            insertMode: 'appendTo',
             credits: '<p>UserScript được viết bởi: <a href="https://nntoan.com/">Toan Nguyen</a></p>',
             general: {
                 host: location.host,
@@ -86,6 +95,7 @@
                 ebookType: null,
                 downloadBtnStatus: 'btn-primary btn-success btn-info btn-warning btn-danger blue success warning info danger error',
                 downloadAppendTo: null,
+                downloadWrapper: null,
             },
             ebook: {
                 title: null,
@@ -134,18 +144,33 @@
             this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID());
 
             // Works with download button
-            this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
+            if (this.createDownloadWrapper === true) {
+                this.elements.$downloadWrapper = $(this.options.classNames.downloadWrapper);
+                this.elements.$downloadWrapper.append(this.options.classNames.downloadAppendTo);
+                this.elements.$downloadBtn.appendTo(this.options.classNames.downloadWrapper);
+            } else {
+                this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
+            }
             this.registerEventHandlers(this.elements.$downloadBtn, 'dl');
         },
 
+        /**
+         * Retrieve/update book information.
+         *
+         * @returns void
+         */
         getBookInfo: function () {
-            var options = this.options;
+            var options = this.options,
+                $infoBlock = this.elements.$infoBlock;
 
-            options.ebook.title = this.elements.$infoBlock.find(options.classNames.ebookTitle).text().trim();
-            options.ebook.author = this.elements.$infoBlock.find(options.classNames.ebookAuthor).find('p').text().trim();
-            options.ebook.cover = this.elements.$infoBlock.find(options.classNames.ebookCover).find('img').attr('src');
-            options.ebook.description = this.elements.$infoBlock.find(options.classNames.ebookDesc).html();
-            var $ebookType = this.elements.$infoBlock.find(options.classNames.ebookType);
+            options.ebook = $.extend(options.ebook, {
+                title: $infoBlock.find(options.classNames.ebookTitle).text().trim(),
+                author: $infoBlock.find(options.classNames.ebookAuthor).find('p').text().trim(),
+                cover: $infoBlock.find(options.classNames.ebookCover).find('img').attr('src'),
+                description: $infoBlock.find(options.classNames.ebookDesc).html(),
+            });
+
+            var $ebookType = $infoBlock.find(options.classNames.ebookType);
             if ($ebookType.length) {
                 $ebookType.each(function () {
                     options.ebook.tags.push($(this).text().trim());
@@ -153,6 +178,12 @@
             }
         },
 
+        /**
+         * Create new RegExp instance from array.
+         *
+         * @param {Array} regExp Regular expression array
+         * @returns {RegExp}
+         */
         createRegExp: function (regExp) {
             if (!regExp.length) {
                 return;
@@ -161,11 +192,18 @@
             return new RegExp(regExp[0], regExp[1]);
         },
 
-        registerEventHandlers: function ($widget, typeFn) {
+        /**
+         * Register all event handlers.
+         *
+         * @param {Element} $widget Current widget DOM element
+         * @param {String} event Type of event
+         * @returns void
+         */
+        registerEventHandlers: function ($widget, event) {
             var self = this,
                 options = this.options;
 
-            if (typeFn === 'dl') {
+            if (event === 'dl') {
                 $widget.one('click contextmenu', function (e) {
                     e.preventDefault();
 
@@ -173,7 +211,9 @@
 
                     $.ajax(options.xhr.chapter).done(function (response) {
                         options.chapters.chapList = response.match(self.createRegExp(options.regularExp.chapList));
-                        options.chapters.chapList = options.chapters.chapList.map(self.chapListValueFilter);
+                        options.chapters.chapList = options.chapters.chapList.map(function (val) {
+                            return self.chapListValueFilter(options, val);
+                        });
 
                         if (e.type === 'contextmenu') {
                             $widget.off('click');
@@ -208,6 +248,12 @@
             }
         },
 
+        /**
+         * Get chapter content process.
+         *
+         * @param {Element} $widget Current widget DOM element
+         * @returns void
+         */
         getContent: function ($widget) {
             var self = this,
                 options = this.options;
@@ -289,15 +335,26 @@
             });
         },
 
-        chapListValueFilter: function (val) {
-            var options = this.options;
-
+        /**
+         * Callback function to handle chap list values.
+         *
+         * @param {object} options
+         * @param {string} val
+         * @returns {string}
+         */
+        chapListValueFilter: function (options, val) {
             val = val.slice(options.chapters.chapListSlice[0], options.chapters.chapListSlice[1]);
             val = val.replace(options.general.referrer, '');
 
             return val.trim();
         },
 
+        /**
+         * Update CSS of download button.
+         *
+         * @param {string} status Download status
+         * @returns void
+         */
         downloadStatus: function (status) {
             var self = this,
                 options = this.options;
@@ -305,6 +362,13 @@
             self.elements.$downloadBtn.removeClass(options.classNames.downloadBtnStatus).addClass('btn-' + status).addClass(status);
         },
 
+        /**
+         * Handle error event of downloading process.
+         *
+         * @param {boolean} error
+         * @param {string} message
+         * @returns {string}
+         */
         downloadError: function (error, message) {
             var options = this.options;
 
@@ -321,6 +385,12 @@
             return '<p class="no-indent"><a href="' + options.general.referrer + options.chapters.chapId + '">' + message + '</a></p>';
         },
 
+        /**
+         * Parse chapter content and wrap a <div> tag for ePub.
+         *
+         * @param {string} html Chapter content as HTML
+         * @returns {string}
+         */
         parseHtml: function (html) {
             var options = this.options;
 
@@ -340,6 +410,12 @@
             return '<div>' + html + '</div>';
         },
 
+        /**
+         * Save ebook process.
+         *
+         * @param {Element} $widget Current DOM element
+         * @returns void
+         */
         saveEbook: function ($widget) {
             var self = this,
                 options = this.options;
@@ -360,31 +436,46 @@
 
             self.jepub.notes(self.processing.beginEnd + self.processing.titleError + '<br /><br />' + options.credits);
 
-            self.jepub.generate().then(self.afterGenerateEpub).catch(function (error) {
+            self.jepub.generate().then(function (epubZipContent) {
+                self.releaseTheKraken(self, $widget, epubZipContent);
+            }).catch(function (error) {
                 self.downloadStatus('error');
                 console.error(error);
             });
         },
 
-        afterGenerateEpub: function (epubZipContent) {
-            var self = this,
-                options = this.options,
+        /**
+         * Create BLOB and save file to browser.
+         *
+         * @param {Object} that
+         * @param {Element} $widget
+         * @param {Blob} epubZipContent
+         * @returns void
+         */
+        releaseTheKraken: function (that, $widget, epubZipContent) {
+            var options = that.options,
                 ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
 
             document.title = '[⇓] ' + options.ebook.title;
-            self.elements.$window.off('beforeunload');
+            that.elements.$window.off('beforeunload');
 
-            self.elements.$downloadBtn.attr({
+            $widget.attr({
                 href: window.URL.createObjectURL(epubZipContent),
                 download: ebookFilepath
             }).text('✓ Hoàn thành').off('click');
-            if (!self.elements.$downloadBtn.hasClass('error')) {
+            if (!$widget.hasClass('error')) {
                 self.downloadStatus('success');
             }
 
             saveAs(epubZipContent, ebookFilepath);
+            that._trigger('complete');
         },
 
+        /**
+         * Generate UUID.
+         *
+         * @returns {string} Universally Unique Identifier
+         */
         generateUUID : function () {
             // Universally Unique Identifier
             var d = new Date().getTime();
