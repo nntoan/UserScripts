@@ -17,7 +17,7 @@
 // ==UserLibrary==
 // @name         MB Downloader Library
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.1.0
+// @version      0.1.1
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -29,7 +29,7 @@
 
 /*jshint evil:true newcap:false*/
 /*global unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, $, document, console, location, setInterval, setTimeout, clearInterval, jEpub, saveAs*/
-(function($, window) {
+(function($, window, jEpub, saveAs) {
     'use strict';
 
     $.widget('nntoan.mbDownloader', {
@@ -96,9 +96,9 @@
             ebook: {
                 title: null,
                 author: null,
+                publisher: location.host,
                 description: null,
                 tags: [],
-                publisher: location.host,
             },
             chapters: {
                 chapList: [],
@@ -137,7 +137,7 @@
 
             // Prepare & register jEpub instance
             this.getBookInfo();
-            this.jepub = new jEpub(this.options.ebook);
+            this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID());
 
             // Works with download button
             this.elements.$downloadBtn.appendTo(this.options.classNames.downloadAppendTo);
@@ -390,7 +390,19 @@
 
             saveAs(epubZipContent, ebookFilepath);
         },
+
+        generateUUID : function () {
+            // Universally Unique Identifier
+            var d = new Date().getTime();
+            var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = (d + Math.random() * 16) % 16 | 0;
+                d = Math.floor(d / 16);
+                return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+            });
+
+            return uuid;
+        },
     });
 
     return $.nntoan.mbDownloader;
-})(jQuery, window);
+})(jQuery, window, document, jEpub, saveAs);
