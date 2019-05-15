@@ -137,6 +137,7 @@
 
             // Prepare & register jEpub instance
             this.getBookInfo();
+            console.log(saveAs);
             this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID());
 
             // Works with download button
