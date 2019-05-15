@@ -17,7 +17,7 @@
 // ==UserLibrary==
 // @name         MB Downloader Library
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.0.8
+// @version      0.0.9
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -97,7 +97,7 @@
                 title: null,
                 author: null,
                 description: null,
-                tags: null,
+                tags: [],
                 publisher: location.host,
             },
             chapters: {
