@@ -1,23 +1,23 @@
 // ==UserScript==
 // @namespace    https://github.com/nntoan/UserScripts
 // @exclude      *
-// @require      https://code.jquery.com/jquery-3.3.1.min.js
-// @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+// @require      https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js
+// @require      https://cdn.jsdelivr.net/npm/jquery-ui@1.12.1/ui/widget.min.js
 // @require      https://unpkg.com/jepub@1.2.5/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.1/dist/FileSaver.min.js
-// @grant        unsafeWindow
-// @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @run-at       document-idle
+// @connect      self
+// @noframes
 
 // ==UserLibrary==
 // @name         MB Downloader Library
 // @description  Tải truyện từ các trang đọc truyện phổ biến dưới định dạng epub.
-// @version      0.1.2
+// @version      0.1.3
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -28,8 +28,8 @@
 // ==/UserLibrary==
 
 /*jshint evil:true newcap:false*/
-/*global unsafeWindow, GM_addStyle, GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, $, document, console, location, setInterval, setTimeout, clearInterval, jEpub, saveAs*/
-(function($, window, document, jEpub, saveAs) {
+/*global GM_getValue, GM_setValue, GM_xmlhttpRequest, GM_registerMenuCommand, GM_deleteValue, GM_listValues, console, location, jEpub, saveAs*/
+(function($, window, document) {
     'use strict';
 
     $.widget('nntoan.mbDownloader', {
@@ -405,4 +405,4 @@
     });
 
     return $.nntoan.mbDownloader;
-})(jQuery, window, document, jEpub, saveAs);
+})(jQuery, window, documennt);
