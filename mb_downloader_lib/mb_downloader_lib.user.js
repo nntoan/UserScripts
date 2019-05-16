@@ -71,13 +71,13 @@
                 documentTitle: '[...] Vui lòng chờ trong giây lát',
             },
             regularExp: {
-                chapter: ['\s*Chương\s*\d+\s?:.*[^<\n]', 'g'],
-                novel: ['\s*Tiểu\s*thuyết\s?:.*[^<\n]', 'g'],
+                chapter: ['\s*Chương\s*\d+\s?:.*[^<\n]', 'g'], //eslint-disable-line
+                novel: ['\s*Tiểu\s*thuyết\s?:.*[^<\n]', 'g'], //eslint-disable-line
                 chineseSpecialChars: ['[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\u10000-\u10FFFF]+', 'gm'],
-                alphanumeric: ['\s[a-zA-Z0-9]{6,8}(="")?\s', 'gm'],
+                alphanumeric: ['\s[a-zA-Z0-9]{6,8}(="")?\s', 'gm'], //eslint-disable-line
                 alphabet: ['[A-Z]'],
-                number: ['\d+'],
-                buttons: ['\([^(]+<button[^/]+<\/button>[^)]*\)\s*', 'gi'],
+                number: ['\d+'], //eslint-disable-line
+                buttons: ['\([^(]+<button[^/]+<\/button>[^)]*\)\s*', 'gi'], //eslint-disable-line
                 eoctext: ['(ps:|hoan nghênh quảng đại bạn đọc quang lâm|Huyền ảo khoái trí ân cừu)', 'i'],
                 breakline: ['\n', 'g'],
                 chapList: ['(?:href=")[^")]+(?=")', 'g'],
@@ -141,7 +141,7 @@
 
             // Prepare & register jEpub instance
             this.getBookInfo();
-            this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID());
+            this.jepub = new jEpub(this.options.ebook).uuid(this.generateUUID()); //eslint-disable-line
 
             // Works with download button
             if (this.createDownloadWrapper === true) {
@@ -155,10 +155,10 @@
         },
 
         /**
-         * Retrieve/update book information.
-         *
-         * @returns void
-         */
+        * Retrieve/update book information.
+        *
+        * @returns void
+        */
         getBookInfo: function () {
             var options = this.options,
                 $infoBlock = this.elements.$infoBlock;
@@ -193,11 +193,11 @@
         },
 
         /**
-         * Create new RegExp instance from array.
-         *
-         * @param {Array} regExp Regular expression array
-         * @returns {RegExp}
-         */
+        * Create new RegExp instance from array.
+        *
+        * @param {Array} regExp Regular expression array
+        * @returns {RegExp}
+        */
         createRegExp: function (regExp) {
             if (!regExp.length) {
                 return;
@@ -207,12 +207,12 @@
         },
 
         /**
-         * Register all event handlers.
-         *
-         * @param {Element} $widget Current widget DOM element
-         * @param {String} event Type of event
-         * @returns void
-         */
+        * Register all event handlers.
+        *
+        * @param {Element} $widget Current widget DOM element
+        * @param {String} event Type of event
+        * @returns void
+        */
         registerEventHandlers: function ($widget, event) {
             var self = this,
                 options = this.options;
@@ -248,7 +248,7 @@
 
                             $widget.one('click', function (e) {
                                 e.preventDefault();
-                                self.saveEbook();
+                                self.saveEbook($widget);
                             });
 
                             self.getContent($widget);
@@ -256,18 +256,18 @@
                     }).fail(function (error) {
                         $widget.text('Lỗi danh mục');
                         self.downloadStatus('error');
-                        console.error(error);
+                        console.error(error); //eslint-disable-line
                     });
                 });
             }
         },
 
         /**
-         * Get chapter content process.
-         *
-         * @param {Element} $widget Current widget DOM element
-         * @returns void
-         */
+        * Get chapter content process.
+        *
+        * @param {Element} $widget Current widget DOM element
+        * @returns void
+        */
         getContent: function ($widget) {
             var self = this,
                 options = this.options;
@@ -350,12 +350,12 @@
         },
 
         /**
-         * Callback function to handle chap list values.
-         *
-         * @param {object} options
-         * @param {string} val
-         * @returns {string}
-         */
+        * Callback function to handle chap list values.
+        *
+        * @param {object} options
+        * @param {string} val
+        * @returns {string}
+        */
         chapListValueFilter: function (options, val) {
             val = val.slice(options.chapters.chapListSlice[0], options.chapters.chapListSlice[1]);
             val = val.replace(options.general.referrer, '');
@@ -364,11 +364,11 @@
         },
 
         /**
-         * Update CSS of download button.
-         *
-         * @param {string} status Download status
-         * @returns void
-         */
+        * Update CSS of download button.
+        *
+        * @param {string} status Download status
+        * @returns void
+        */
         downloadStatus: function (status) {
             var self = this,
                 options = this.options;
@@ -377,12 +377,12 @@
         },
 
         /**
-         * Handle error event of downloading process.
-         *
-         * @param {boolean} error
-         * @param {string} message
-         * @returns {string}
-         */
+        * Handle error event of downloading process.
+        *
+        * @param {boolean} error
+        * @param {string} message
+        * @returns {string}
+        */
         downloadError: function (error, message) {
             var options = this.options;
 
@@ -393,18 +393,18 @@
             }
 
             if (error) {
-                console.error(message);
+                console.error(message); //eslint-disable-line
             }
 
             return '<p class="no-indent"><a href="' + options.general.referrer + options.chapters.chapId + '">' + message + '</a></p>';
         },
 
         /**
-         * Parse chapter content and wrap a <div> tag for ePub.
-         *
-         * @param {string} html Chapter content as HTML
-         * @returns {string}
-         */
+        * Parse chapter content and wrap a <div> tag for ePub.
+        *
+        * @param {string} html Chapter content as HTML
+        * @returns {string}
+        */
         parseHtml: function (html) {
             var options = this.options;
 
@@ -425,11 +425,11 @@
         },
 
         /**
-         * Save ebook process.
-         *
-         * @param {Element} $widget Current DOM element
-         * @returns void
-         */
+        * Save ebook process.
+        *
+        * @param {Element} $widget Current DOM element
+        * @returns void
+        */
         saveEbook: function ($widget) {
             var self = this,
                 options = this.options;
@@ -451,21 +451,22 @@
             self.jepub.notes(self.processing.beginEnd + self.processing.titleError + '<br /><br />' + options.credits);
 
             self.jepub.generate().then(function (epubZipContent) {
+                self._trigger('processEbook', null, self);
                 self.releaseTheKraken(self, $widget, epubZipContent);
             }).catch(function (error) {
                 self.downloadStatus('error');
-                console.error(error);
+                console.error(error); //eslint-disable-line
             });
         },
 
         /**
-         * Create BLOB and save file to browser.
-         *
-         * @param {Object} that
-         * @param {Element} $widget
-         * @param {Blob} epubZipContent
-         * @returns void
-         */
+        * Create BLOB and save file to browser.
+        *
+        * @param {Object} that
+        * @param {Element} $widget
+        * @param {Blob} epubZipContent
+        * @returns void
+        */
         releaseTheKraken: function (that, $widget, epubZipContent) {
             var options = that.options,
                 ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
@@ -487,10 +488,10 @@
         },
 
         /**
-         * Generate UUID.
-         *
-         * @returns {string} Universally Unique Identifier
-         */
+        * Generate UUID.
+        *
+        * @returns {string} Universally Unique Identifier
+        */
         generateUUID : function () {
             // Universally Unique Identifier
             var d = new Date().getTime();
@@ -503,6 +504,4 @@
             return uuid;
         },
     });
-
-    return $.nntoan.mbDownloader;
 })(jQuery, window, document);
