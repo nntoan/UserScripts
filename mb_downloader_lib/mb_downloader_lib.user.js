@@ -17,7 +17,7 @@
 // ==UserLibrary==
 // @name         MB (MyBook) Downloader Factory
 // @description  A small jQuery widget which contains all required functionality to scraping data from story/novel on the Internet.
-// @version      0.1.6
+// @version      0.1.7
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -179,6 +179,22 @@
         },
 
         /**
+         * Update chapter ID before get ajax content.
+         *
+         * @param {Object} that     Current widget
+         * @param {Object} options  Widget options
+         * @returns void
+         */
+        updateChapId: function (that, options) {
+            options.chapters.chapId = options.chapters.chapList[that.processing.count];
+            options.xhr.content.url = options.general.pathname + options.chapters.chapId + '/';
+            console.log(options.chapters);
+            console.log(that.processing);
+
+            that._trigger('chapIdUpdated');
+        },
+
+        /**
          * Create new RegExp instance from array.
          *
          * @param {Array} regExp Regular expression array
@@ -262,7 +278,7 @@
                 return;
             }
 
-            options.chapters.chapId = options.chapters.chapList[self.processing.count];
+            this.updateChapId(self, options);
 
             $.ajax(options.xhr.content).done(function (response) {
                 var $data = $(response),
