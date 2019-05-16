@@ -453,6 +453,7 @@
             console.log(self);
             console.log(self.jepub);
             console.log($widget);
+            console.log(options.processing.ebookFilename + options.processing.ebookFileExt);
             self.jepub.generate().then(function (epubZipContent) {
                 var options = self.options,
                 ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
