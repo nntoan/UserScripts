@@ -451,8 +451,25 @@
             self.jepub.notes(self.processing.beginEnd + self.processing.titleError + '<br /><br />' + options.credits);
 
             self.jepub.generate().then(function (epubZipContent) {
+                var options = self.options,
+                ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
+
+                consonle.log('processEbook');
                 self._trigger('processEbook', null, self);
-                self.releaseTheKraken(self, $widget, epubZipContent);
+                document.title = '[⇓] ' + options.ebook.title;
+                self.elements.$window.off('beforeunload');
+
+                $widget.attr({
+                    href: window.URL.createObjectURL(epubZipContent),
+                    download: ebookFilepath
+                }).text('✓ Hoàn thành').off('click');
+                if (!$widget.hasClass('error')) {
+                    self.downloadStatus('success');
+                }
+
+                self._trigger('beforeSave', null, self);
+                saveAs(epubZipContent, ebookFilepath); //eslint-disable-line
+                self._trigger('complete', null, self);
             }).catch(function (error) {
                 self.downloadStatus('error');
                 console.error(error); //eslint-disable-line
