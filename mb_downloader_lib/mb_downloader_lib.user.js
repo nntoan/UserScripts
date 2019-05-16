@@ -453,10 +453,10 @@
             console.log(self);
             console.log(self.jepub);
             console.log($widget);
-            console.log(options.processing.ebookFilename + options.processing.ebookFileExt);
+            console.log(options.processing.ebookFileName + options.processing.ebookFileExt);
             self.jepub.generate().then(function (epubZipContent) {
                 var options = self.options,
-                ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
+                ebookFilepath = options.processing.ebookFileName + options.processing.ebookFileExt;
 
                 consonle.log('processEbook');
                 self._trigger('processEbook', null, self);
@@ -490,7 +490,7 @@
         */
         releaseTheKraken: function (that, $widget, epubZipContent) {
             var options = that.options,
-                ebookFilepath = options.processing.ebookFilename + options.processing.ebookFileExt;
+                ebookFilepath = options.processing.ebookFileName + options.processing.ebookFileExt;
 
             document.title = '[⇓] ' + options.ebook.title;
             that.elements.$window.off('beforeunload');
