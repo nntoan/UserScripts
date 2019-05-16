@@ -17,7 +17,7 @@
 // ==UserLibrary==
 // @name         MB (MyBook) Downloader Factory
 // @description  A small jQuery widget which contains all required functionality to scraping data from story/novel on the Internet.
-// @version      0.1.7
+// @version      0.1.8
 // @icon         https://i.imgur.com/1Wyz9je.jpg
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -188,10 +188,8 @@
         updateChapId: function (that, options) {
             options.chapters.chapId = options.chapters.chapList[that.processing.count];
             options.xhr.content.url = options.general.pathname + options.chapters.chapId + '/';
-            console.log(options.chapters);
-            console.log(that.processing);
 
-            that._trigger('chapIdUpdated');
+            that._trigger('chapIdUpdated', null, options);
         },
 
         /**
@@ -443,7 +441,7 @@
             self.processing.endDownload = true;
             $widget.html('Đang nén EPUB...');
 
-            if (options.chapters.chapTitle.length) {
+            if (self.processing.titleError.length) {
                 self.processing.titleError = '<p class="no-indent"><strong>Các chương lỗi: </strong>' + self.processing.titleError.join(', ') + '</p>';
             } else {
                 self.processing.titleError = '';
@@ -483,8 +481,9 @@
                 self.downloadStatus('success');
             }
 
-            saveAs(epubZipContent, ebookFilepath);
-            that._trigger('complete');
+            that._trigger('beforeSave', null, that);
+            saveAs(epubZipContent, ebookFilepath); //eslint-disable-line
+            that._trigger('complete', null, that);
         },
 
         /**
