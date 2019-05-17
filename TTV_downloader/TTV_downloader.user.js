@@ -14,7 +14,7 @@
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
-// @require      https://github.com/nntoan/mbDownloader/releases/download/v0.1.19/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.1.19/src/mbDownloader.min.js
 // @connect      self
 // @run-at       document-idle
 // @noframes
