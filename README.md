@@ -14,6 +14,7 @@ You will need to install an extension to use userscript.
 ## What's in this pack !?
 
 * [TTV Downloader](https://greasyfork.org/en/scripts/382839-tangthuvien-downloader): TTV stands for TangThuVien, a very popular online book service in Vietnam. You are able to reading for free online of course. But I would prefer to read thing offline, so here we are :)
+* [TCT Downloader](https://greasyfork.org/en/scripts/386212-truyencuatui-downloader): TCT stands for TruyenCuaTui, just another online book reading service in Vietnam.
 
 ## Credits
 
