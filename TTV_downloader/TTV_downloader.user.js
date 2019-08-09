@@ -2,7 +2,7 @@
 // @name         TangThuVien downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ truyen.tangthuvien.vn định dạng epub.
-// @version      1.1.0
+// @version      1.1.1
 // @icon         https://i.imgur.com/rt1QT6z.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -14,7 +14,7 @@
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
-// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.1.19/src/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.1/src/mbDownloader.min.js
 // @connect      self
 // @run-at       document-idle
 // @noframes
@@ -36,6 +36,8 @@
                 });
                 this.options.xhr.content.url = this.options.general.pathname + this.options.chapters.chapId + '/';
                 this.elements.$downloadBtn.css('margin-top', '10px');
+
+                console.time('downloadAndGenerateEpub');
             }
         });
 
@@ -77,14 +79,18 @@
                     }
                 }
             },
+            bookInfoUpdated: function (event, data) {
+                console.log('Book information updated...', data.epubInfo);
+            },
             chapTitleUpdated: function(event, data) {
                 console.log('Chapter: ' + data.chapNum + ' downloaded...');
             },
             beforeCreateEpub: function(event, that) {
                 console.log('Prepare generate epub...');
             },
-            complete: function() {
+            complete: function(event, that) {
                 console.log('Epub downloaded successfully. Please check your Downloads folder.');
+                console.timeEnd('downloadAndGenerateEpub');
             }
         });
     });
