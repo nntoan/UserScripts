@@ -2,7 +2,7 @@
 // @name         TangThuVien downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ truyen.tangthuvien.vn định dạng epub.
-// @version      1.1.1
+// @version      1.1.2
 // @icon         https://i.imgur.com/rt1QT6z.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -14,7 +14,7 @@
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
-// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.1/src/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.3/src/mbDownloader.min.js
 // @connect      self
 // @run-at       document-idle
 // @noframes

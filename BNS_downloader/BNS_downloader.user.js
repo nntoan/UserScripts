@@ -1,17 +1,15 @@
 // ==UserScript==
-// @name         TruyenCuaTui downloader
+// @name         BachNgocSach downloader
 // @namespace    https://nntoan.com/
-// @description  Tải truyện từ truyencuatui.net định dạng epub
-// @version      1.0.2
-// @icon         https://1.bp.blogspot.com/-dKHpsymtdMY/WWhR69EBgOI/AAAAAAAAA4s/bxIb3L0bFxETn-BR6hOewuzZyPnh9ZfGgCLcBGAs/s1600/truyen-cua-tui-logo.png
+// @description  Tải truyện từ bachngocsach.com định dạng epub
+// @version      1.0.0
+// @icon         http://i.imgur.com/3lomxTC.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
 // @license      MIT; https://nntoan.mit-license.org/
 // @supportURL   https://github.com/nntoan/UserScripts/issues
-// @match        http://truyencuatui.net/truyen/*
-// @match        http://truyencuatui.vn/truyen/*
-// @match        https://truyencuatui.net/truyen/*
-// @match        https://truyencuatui.vn/truyen/*
+// @match        http://bachngocsach.com/reader/*
+// @match        https://bachngocsach.com/reader/*
 // @require      https://unpkg.com/jszip@3.2.1/dist/jszip.min.js
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
@@ -32,14 +30,49 @@
                 this._super();
 
                 // Extending options
-                this.options.processing.ebookFileName = this.options.general.pathname.slice(8, -5);
-                this.options.xhr.chapter.url = this.options.xhr.chapter.url + $(this.options.classNames.chapterList).data('href') + '.html';
-                this.options.xhr.content.url = this.options.general.host + this.options.chapters.chapId;
+                this.options.processing.ebookFileName = this.options.general.pathname.slice(8);
+                this.options.xhr.chapter.url = this.options.xhr.chapter.url + $(this.options.classNames.chapterList).attr('href');
+                this.options.xhr.chapter.data = $.extend(this.options.xhr.chapter.data, {
+                    page: 'all'
+                });
 
                 // Styling download button for current site
-                this.elements.$downloadBtn.attr('class', 'btn btn-lg btn-raised btn-info btn-block btn-downloadepub');
+                this.elements.$downloadBtn.attr('class', 'truyen-button');
+                this.elements.$downloadBtn.css({ 'background': '#f4b759', 'border-color': '#eb813d' });
 
                 console.time('downloadAndGenerateEpub');
+            },
+
+            /**
+             * Update CSS of download button.
+             *
+             * @param {String} status Download status
+             * @returns void
+             */
+            downloadStatus: function (status) {
+                this._super(status);
+                this.elements.$downloadBtn.css({ 'background': '#e05d59', 'color': '#ffffff !important', 'border-color': '#c83e35' });
+            },
+
+            /**
+             * Callback function to handle chap list values.
+             *
+             * @param {Object} options
+             * @param {String} val
+             * @returns {String}
+             */
+            chapListValueFilter: function (options, val) {
+                val = this._super(options, val);
+                val = val.replace(location.protocol + '//' + location.host, '');
+                if (val.indexOf(location.pathname) === -1) {
+                    val = '';
+                }
+
+                if (val === location.pathname) {
+                    val = '';
+                }
+
+                return val.trim();
             },
         });
 
@@ -49,27 +82,27 @@
                 ebookFileExt: '.epub'
             },
             regularExp: {
-                chapter: null,
-                eoctext: ['(ps:|hoan nghênh quảng đại bạn đọc quang lâm|Huyền ảo khoái trí ân cừu|truyencuatui .net|truyencuatui)', 'i'],
+                chapter: null
             },
             classNames: {
-                novelId: '#form-report > div.modal-footer > input[type=hidden]:nth-child(2)',
-                infoBlock: '.bo-truyen',
-                chapterContent: '.chapter-content',
-                chapterNotContent: 'iframe, script, style, a, div, p:has(a[href*="truyencuatui.net"])',
+                novelId: '#login-user',
+                infoBlock: '.node-truyen',
+                chapterContent: '#noidung',
+                chapterNotContent: 'iframe, script, style, a, div, p:has(a[href*="bachngocsach.com"])',
                 chapterVip: '#btnChapterVip',
-                chapterList: '.btn-chapters',
-                chapterTitle: 'h1.title > span',
-                ebookTitle: 'h1.title',
-                ebookAuthor: 'a.list-group-item > span:nth-child(2)',
-                ebookCover: '.cover',
-                ebookDesc: '.contentt',
-                ebookType: 'span.list-group-item:first a',
+                chapterList: '#chuong-list-more',
+                chapterTitle: 'h1#chuong-title',
+                ebookTitle: 'h1#truyen-title',
+                ebookAuthor: 'div#tacgia > a',
+                ebookCover: '#anhbia',
+                ebookDesc: '#gioithieu',
+                ebookType: 'div#theloai a',
                 downloadBtnStatus: 'btn-primary btn-success btn-info btn-warning btn-danger blue success warning info danger error',
-                downloadAppendTo: 'div.jumbotron > div > div.col-md-8 > p:nth-child(6)',
+                downloadAppendTo: 'nav#truyen-nav:last',
             },
             ebook: {
-                fallbackCover: 'https://3.bp.blogspot.com/-g9DNzD8a38g/WWheUmaCjuI/AAAAAAAAA40/K0dd-XV3Dn0UivI2UzcxkYPz7KkVa4-CQCLcBGAs/s1600/cover.jpg'
+                corsAnywhere: '',
+                fallbackCover: 'https://bachngocsach.com/reader/sites/default/files/logo.png'
             },
             chapters: {
                 chapListSlice: [6],
@@ -77,7 +110,7 @@
             xhr: {
                 chapter: {
                     type: 'GET',
-                    url: '/chuong/',
+                    url: '',
                 },
                 content: {
                     type: 'GET',
