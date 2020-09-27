@@ -112,6 +112,13 @@
                     type: 'GET',
                     url: '/ajax.php',
                 },
+                hash: {
+                    type: 'GET',
+                    url: '/ajax.php',
+                    data: {
+                        type: 'hash'
+                    }
+                },
                 content: {
                     type: 'GET',
                     xhrFields: {
@@ -134,6 +141,9 @@
                 data.epubInfo = $.extend(data.epubInfo, options.ebook);
 
                 console.log('Book information updated...', data.epubInfo);
+            },
+            getListOfChaptersPreprocess: function (event, that) {
+                return $.when($.ajax(that.options.xhr.hash));
             },
             chapIdUpdated: function (event, that) {
                 var options = that.options;

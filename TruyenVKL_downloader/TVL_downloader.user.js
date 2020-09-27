@@ -3,7 +3,7 @@
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ truyenvkl.com định dạng epub
 // @version      1.0.0
-// @icon         http://i.imgur.com/3lomxTC.png
+// @icon         https://i.imgur.com/zCwfI3b.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
 // @license      MIT; https://nntoan.mit-license.org/
@@ -14,8 +14,9 @@
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
-// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.4/src/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.3/src/mbDownloader.min.js
 // @connect      self
 // @run-at       document-idle
 // @noframes
@@ -31,27 +32,17 @@
 
                 // Extending options
                 this.options.processing.ebookFileName = this.options.general.pathname.slice(1, -1);
+                this.options.xhr.chapter.url = $(this.options.classNames.chapterList).attr('href');
                 this.options.xhr.chapter.data = $.extend(this.options.xhr.chapter.data, {
-                    type: 'chapter_option',
-                    data: self.elements.$novelId.val(),
-                    bnum: '',
-                    num: 1,
-                    hash: '',
+                    action: 'load_data'
                 });
                 this.options.xhr.content.url = this.options.general.pathname + this.options.chapters.chapId + '/';
 
-                console.time('downloadAndGenerateEpub');
-            },
+                // Styling download button for current site
+                $(this.options.classNames.downloadAppendTo).after(this.elements.$downloadBtn);
+                this.elements.$downloadBtn.attr('class', 'btn border-btn download-btn');
 
-            /**
-             * Update CSS of download button.
-             *
-             * @param {String} status Download status
-             * @returns void
-             */
-            downloadStatus: function (status) {
-                this._super(status);
-                this.elements.$downloadBtn.css({ 'background': '#e05d59', 'color': '#ffffff !important', 'border-color': '#c83e35' });
+                console.time('downloadAndGenerateEpub');
             },
 
             /**
@@ -86,19 +77,19 @@
             },
             classNames: {
                 novelId: '#truyen-id',
-                infoBlock: '.node-truyen',
-                chapterContent: '#noidung',
+                infoBlock: '.detail-left',
+                chapterContent: '#bookContent',
                 chapterNotContent: 'iframe, script, style, a, div, p:has(a[href*="bachngocsach.com"])',
                 chapterVip: '#btnChapterVip',
-                chapterList: '#chuong-list-more',
-                chapterTitle: 'h1#chuong-title',
-                ebookTitle: 'h1#truyen-title',
-                ebookAuthor: '.info a[itemprop="author"]',
-                ebookCover: '.books img',
-                ebookDesc: '.desc-text',
-                ebookType: 'div#theloai a',
+                chapterList: '.lb.btns > a',
+                chapterTitle: 'h2.bookHeading',
+                ebookTitle: 'h1.bookname',
+                ebookAuthor: 'p.author',
+                ebookCover: '.cover.img img',
+                ebookDesc: '#gioithieu .article-cont',
+                ebookType: 'p.tags a',
                 downloadBtnStatus: 'btn-primary btn-success btn-info btn-warning btn-danger blue success warning info danger error',
-                downloadAppendTo: 'nav#truyen-nav:last',
+                downloadAppendTo: '.lb.btns > .follow-btn',
             },
             ebook: {
                 corsAnywhere: '',
@@ -109,8 +100,9 @@
             },
             xhr: {
                 chapter: {
-                    type: 'GET',
-                    url: '/ajax.php',
+                    type: 'POST',
+                    url: '',
+                    dataType: 'json'
                 },
                 content: {
                     type: 'GET',
