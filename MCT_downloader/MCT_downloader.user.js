@@ -2,7 +2,7 @@
 // @name         MeTruyenChu downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ metruyenchu.com định dạng epub.
-// @version      1.0.0
+// @version      1.0.1
 // @icon         https://i.imgur.com/ZOmmIGK.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -15,7 +15,7 @@
 // @require      https://unpkg.com/ejs@2.6.1/ejs.min.js
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
-// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.3/src/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/npm/mbdownloader@0.2.4/src/mbDownloader.js
 // @connect      self
 // @run-at       document-idle
 // @noframes
