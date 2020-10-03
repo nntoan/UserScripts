@@ -2,7 +2,7 @@
 // @name         BachNgocSach downloader
 // @namespace    https://nntoan.com/
 // @description  Tải truyện từ bachngocsach.com định dạng epub
-// @version      1.0.0
+// @version      1.0.1
 // @icon         http://i.imgur.com/3lomxTC.png
 // @author       Toan Nguyen
 // @oujs:author  nntoan
@@ -15,7 +15,7 @@
 // @require      https://unpkg.com/jepub@2.1.0/dist/jepub.min.js
 // @require      https://unpkg.com/file-saver@2.0.2/dist/FileSaver.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js
-// @require      https://cdn.jsdelivr.net/gh/nntoan/mbDownloader@0.2.3/src/mbDownloader.min.js
+// @require      https://cdn.jsdelivr.net/npm/mbdownloader@0.2.4/src/mbDownloader.js
 // @connect      self
 // @run-at       document-idle
 // @noframes
@@ -87,7 +87,7 @@
             classNames: {
                 novelId: '#login-user',
                 infoBlock: '.node-truyen',
-                chapterContent: '#noidung',
+                chapterContent: '#noi-dung',
                 chapterNotContent: 'iframe, script, style, a, div, p:has(a[href*="bachngocsach.com"])',
                 chapterVip: '#btnChapterVip',
                 chapterList: '#chuong-list-more',
