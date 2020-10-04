@@ -15,6 +15,8 @@ You will need to install an extension to use userscript.
 
 * [TTV Downloader](https://greasyfork.org/en/scripts/382839-tangthuvien-downloader): TTV stands for TangThuVien, a very popular online book service in Vietnam. You are able to reading for free online of course. But I would prefer to read thing offline, so here we are :)
 * [TCT Downloader](https://greasyfork.org/en/scripts/386212-truyencuatui-downloader): TCT stands for TruyenCuaTui, just another online book reading service in Vietnam.
+* [MCT Downloader](https://greasyfork.org/en/scripts/412350-metruyenchu-downloader): MCT stands for MeTruyenChu, another popular online story reading site.
+* [BNS Downloader](https://greasyfork.org/en/scripts/388352-bachngocsach-downloader): BNS stands for BachNgocSach, this site always has premier translation quality. I would says one of best if you're looking for quality translation.
 
 ## Credits
 
