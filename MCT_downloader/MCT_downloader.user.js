@@ -135,10 +135,9 @@
              * @returns {String}
              */
             chapListValueFilter: function (options, val) {
-                val = val.slug.replace(options.general.referrer, '');
-                val = '/' + val;
+                var path = '/chuong-' + val.index;
 
-                return val.trim();
+                return path;
             },
 
             /**
@@ -167,11 +166,11 @@
             },
 
             /**
-         * Cleanup redundant charactes in chapter content.
-         *
-         * @param {String} html Chapter content as HTML
-         * @returns {String}
-         */
+             * Cleanup redundant charactes in chapter content.
+             *
+             * @param {String} html Chapter content as HTML
+             * @returns {String}
+             */
             cleanupHtml: function (html) {
                 var options = this.options;
 
